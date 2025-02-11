@@ -1,4 +1,4 @@
-#include <Arduino.h>
+#include "main.h"
 
 #define BUTTON_PIN 2
 #define DEBOUCE_DELAY 150 // ms
