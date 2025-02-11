@@ -2,21 +2,61 @@
 
 static FILE stream = {0};
 
-int own_putchar(char ch, FILE *stream)
+static LiquidCrystal lcd(LCD_RS, LCD_RW, LCD_EN, LCD_D0, LCD_D1, LCD_D2, LCD_D3, LCD_D4, LCD_D5, LCD_D6, LCD_D7);
+
+static char hexaKeys[KEYPAD_ROWS][KEYPAD_COLS] = 
 {
-  Serial.write(ch);
+      {'1','2','3','A'},
+      {'4','5','6','B'},
+      {'7','8','9','C'},
+      {'*','0','#','D'}
+};
+
+static uint8_t rowPins[KEYPAD_ROWS] = {KEYPAD_ROW_0, KEYPAD_ROW_1, KEYPAD_ROW_2, KEYPAD_ROW_3};
+static uint8_t colPins[KEYPAD_COLS] = {KEYPAD_COL_0, KEYPAD_COL_1, KEYPAD_COL_2, KEYPAD_COL_3};
+
+static Keypad KeyPad = Keypad(makeKeymap(hexaKeys), rowPins, colPins, KEYPAD_ROWS, KEYPAD_COLS);
+
+int own_lcd_putchar(char ch, FILE *stream)
+{
+  if (ch == '\f')
+  {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    return 0;
+  }
+  if (ch == '\n')
+  {
+    lcd.setCursor(0, 1);
+    return 0;
+  }
+  lcd.write(ch);
   return 0;
 }
 
-int own_getchar(FILE *stream)
+int own_keypad_getchar(FILE *stream)
 {
-  while (!Serial.available());
-  return Serial.read();
+ char key = KeyPad.getKey();
+ while ( key == NO_KEY )
+ {
+   key = KeyPad.getKey();
+ }
+ if (key == '#')
+  {
+    return '\n';
+  }
+
+ return key;
 }
 
 void own_stdio_setup()
 {
   Serial.begin(BAUDRATE);
-  fdev_setup_stream(&stream, own_putchar, own_getchar, _FDEV_SETUP_RW);
+
+  lcd.begin(LCD_COLS, LCD_ROWS);
+
+  lcd.clear();
+
+  fdev_setup_stream(&stream, own_lcd_putchar, own_keypad_getchar, _FDEV_SETUP_RW);
   stdin = stdout = &stream;
 }

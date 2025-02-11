@@ -5,6 +5,13 @@ void setup(void)
   own_stdio_setup();
   Serial.println("System started\n\r");
   pinMode(LED_BUILTIN, OUTPUT);
+
+  while (true)
+  {
+   char cmd[10] = {0};
+   scanf("%10s", cmd);
+   printf("\f%s", cmd);
+  }
 }  
 
 void LedControl(const char *cmd)
