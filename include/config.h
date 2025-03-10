@@ -37,4 +37,10 @@ enum KEYPAD_PINS
     KEYPAD_COL_3,
 };
 
+#define LED_RED 23
+#define LED_GREEN 22
+#define ACCESS_CODE "1234"
+#define RESET_TIME 3000
+#define CODE_LENGTH 4
+#define RESET_KEY '*'
 #endif // CONFIG_H

@@ -5,8 +5,10 @@
 // Include necessary libraries
 #include <Arduino.h>
 #include <config.h>
+
 #include <stdio.h>
 #include <string.h>
+#include "domofon.h"
 
-void LedControl(const char *cmd);
+
 #endif // MAIN_H

@@ -15,4 +15,6 @@ int own_getchar(FILE *stream);
 int own_lcd_putchar(char ch, FILE *stream);
 int onw_lcd_getchar(FILE *stream);
 
+uint8_t keypadGetState (void);
+
 #endif // OWN_STDIO_H

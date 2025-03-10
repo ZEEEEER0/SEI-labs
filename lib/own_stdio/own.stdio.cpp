@@ -3,6 +3,7 @@
 static FILE stream = {0};
 
 static LiquidCrystal lcd(LCD_RS, LCD_RW, LCD_EN, LCD_D0, LCD_D1, LCD_D2, LCD_D3, LCD_D4, LCD_D5, LCD_D6, LCD_D7);
+static char key = 0;
 
 static char hexaKeys[KEYPAD_ROWS][KEYPAD_COLS] = 
 {
@@ -36,17 +37,29 @@ int own_lcd_putchar(char ch, FILE *stream)
 
 int own_keypad_getchar(FILE *stream)
 {
- char key = KeyPad.getKey();
- while ( key == NO_KEY )
- {
-   key = KeyPad.getKey();
- }
- if (key == '#')
+  while (key == NO_KEY ) 
   {
-    return '\n';
+    key = KeyPad.getKey();
   }
-
+    if (key == '#')
+  {
+    key = '\n';
+  }
  return key;
+}
+
+uint8_t keypadGetState(void)
+{
+  key = KeyPad.getKey();
+
+  if (key == NO_KEY)
+  {
+    return 0;
+  }
+  else
+  {
+    return 1;
+  }
 }
 
 void own_stdio_setup()
