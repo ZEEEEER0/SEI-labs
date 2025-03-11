@@ -66,9 +66,9 @@ void own_stdio_setup()
 {
   Serial.begin(BAUDRATE);
 
-  lcd.begin(LCD_COLS, LCD_ROWS);
+  // lcd.begin(LCD_COLS, LCD_ROWS);
 
-  lcd.clear();
+  // lcd.clear();
 
   fdev_setup_stream(&stream, own_lcd_putchar, own_keypad_getchar, _FDEV_SETUP_RW);
   stdin = stdout = &stream;

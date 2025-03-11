@@ -5,10 +5,8 @@
 // Include necessary libraries
 #include <Arduino.h>
 #include <config.h>
-
 #include <stdio.h>
 #include <string.h>
-#include "domofon.h"
-
+#include "schedule.h"
 
 #endif // MAIN_H

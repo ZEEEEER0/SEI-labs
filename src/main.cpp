@@ -1,11 +1,15 @@
 #include "main.h"
 
+void scheduleTask() {
+    // Implementation of scheduleTask
+}
+
 void setup()
 {
-  domofon_setup();
+    scheduleTask();
 }
 
 void loop()
 {
-  domofon_loop();
+    // ...existing code...
 }

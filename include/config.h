@@ -1,6 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+
 #define LCD_ROWS 2
 #define LCD_COLS 16
 
@@ -37,8 +38,30 @@ enum KEYPAD_PINS
     KEYPAD_COL_3,
 };
 
+#define DebounceTIME 200
+
+#define BUTTON_LED_TASK_OFFSET 0
+#define BUTTON_LEDD_TASK_RECURRENCE 50
+
+#define BLINK_LED_TASK_OFFSET 3
+#define BLINK_LED_TASK_RECURRENCE 1
+
+#define SET_BLINK_FREQUENCY_TASK_OFFSET 5
+#define SET_BLINK_FREQUENCY_TASK_RECURRENCE 100
+
+#define DEFAULT_BLINK_FREQUENCY 1
+#define MINIMUM_BLINK_FREQUENCY 1
+#define MAXIMUM_BLINK_FREQUENCY 10
+#define BUTTON_UP_PIN 3 // Define the pin number for BUTTON_UP_PIN
+#define BUTTON_DOWN_PIN 4 // Define the pin number for BUTTON_DOWN_PIN
+#define BUTTON_PIN 5 // Define the pin number for BUTTON_PIN
+#define LED_GREEN_PIN 7 // Define the pin number for LED_GREEN_PIN
+#define LED_BLUE_PIN 6 // Define the pin number for LED_BLUE_PIN
+#define MY_TIMER_DEFAULT 1
+#define DATA_REFRESH 1
+
 #define LED_RED 23
-#define LED_GREEN 22
+
 #define ACCESS_CODE "1234"
 #define RESET_TIME 3000
 #define CODE_LENGTH 4
