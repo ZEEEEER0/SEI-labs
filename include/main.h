@@ -7,6 +7,9 @@
 #include <config.h>
 #include <stdio.h>
 #include <string.h>
-#include "schedule.h"
+#include <Arduino_FreeRTOS.h>
+#include <semphr.h>
+#include <queue.h>
+#include <tasks.h>
 
 #endif // MAIN_H

@@ -43,8 +43,8 @@ enum KEYPAD_PINS
 #define BUTTON_LED_TASK_OFFSET 0
 #define BUTTON_LEDD_TASK_RECURRENCE 50
 
-#define BLINK_LED_TASK_OFFSET 3
-#define BLINK_LED_TASK_RECURRENCE 1
+#define SINCRON_TASK_OFFSET 3
+#define SINCRON_TASK_RECURRENCE 500
 
 #define SET_BLINK_FREQUENCY_TASK_OFFSET 5
 #define SET_BLINK_FREQUENCY_TASK_RECURRENCE 100
@@ -56,11 +56,23 @@ enum KEYPAD_PINS
 #define BUTTON_DOWN_PIN 4 // Define the pin number for BUTTON_DOWN_PIN
 #define BUTTON_PIN 5 // Define the pin number for BUTTON_PIN
 #define LED_GREEN_PIN 7 // Define the pin number for LED_GREEN_PIN
-#define LED_BLUE_PIN 6 // Define the pin number for LED_BLUE_PIN
+#define LED_RED_PIN 6 // Define the pin number for LED_BLUE_PIN
 #define MY_TIMER_DEFAULT 1
 #define DATA_REFRESH 1
 
+#define QUEUE_LENGH = 10
+#define ITEM_SIZE = sizeof(uint32_t)
+#define STACK_SIZE 128
+#define BUTTON_TASK_PRIORITY 1
+#define BUTTON_LED_RECURRANCE 10
+#define BLINK_LED_TASK_RECURRENCE 50
 #define LED_RED 23
+#define N_INCREMENT_VALUE 1
+#define N_DECREMENT_VALUE 1
+#define QUEUE_SEND_INTERVAL 50
+#define LED_ON_TIME 1000
+#define LED_OFF_TIME 200
+#define SECOND_LED_STATE_CHANGE 1000
 
 #define ACCESS_CODE "1234"
 #define RESET_TIME 3000

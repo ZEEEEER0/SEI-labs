@@ -1,12 +1,8 @@
 #include "main.h"
 
-void scheduleTask() {
-    // Implementation of scheduleTask
-}
-
 void setup()
 {
-    scheduleTask();
+    systemSetup();
 }
 
 void loop()

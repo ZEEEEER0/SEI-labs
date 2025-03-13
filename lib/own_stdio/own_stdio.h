@@ -9,6 +9,7 @@
 #include <Keypad.h>
 
 void own_stdio_setup();
+
 int own_putchar(char ch, FILE *stream);
 int own_getchar(FILE *stream);
 
