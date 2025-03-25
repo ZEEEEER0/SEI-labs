@@ -8,5 +8,10 @@
 #include <stdio.h>
 #include <string.h>
 #include "schedule.h"
+#include "timer-api.h"
+#include "schedule.h"
+#include "tasks.h"
+#include "schedule.h"
+#include "tasks.h"
 
 #endif // MAIN_H

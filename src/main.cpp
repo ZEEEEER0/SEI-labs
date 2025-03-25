@@ -1,15 +1,17 @@
 #include "main.h"
 
-void scheduleTask() {
-    // Implementation of scheduleTask
-}
-
 void setup()
 {
-    scheduleTask();
+    buttonLedTaskSetup();
+    setBlinkFrequencyTaskSetup();
+    idleTaskSetup();
+
+    // Alte inițializări necesare
+    Serial.begin(BAUDRATE);
+    printf("Setup completed\n");
 }
 
 void loop()
 {
-    // ...existing code...
+
 }

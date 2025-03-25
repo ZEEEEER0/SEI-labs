@@ -1,5 +1,7 @@
-#include "task.h"
-
+#include "tasks.h"
+#include "own_stdio.h"
+#include <Arduino.h>
+#include <stdint.h>
 
 static volatile uint32_t blinkFrequency;
 static volatile uint32_t blinkLedTaskCounter = BLINK_LED_TASK_OFFSET;
@@ -19,6 +21,7 @@ void buttonLedTask(void)
     {
         buttonLedTaskSetup();
         needInit = false;
+        printf("buttonLedTask initialized\n");
     }
 
     if (digitalRead(BUTTON_PIN) == LOW)
@@ -27,6 +30,7 @@ void buttonLedTask(void)
         {
             digitalWrite(LED_GREEN_PIN, !digitalRead(LED_GREEN_PIN));
             debounceTime = millis();
+            printf("Button pressed, LED toggled\n");
         }
     }
     else
@@ -52,6 +56,7 @@ void setBlinkFrequency(void)
     {
         setBlinkFrequencyTaskSetup();
         needInit = false;
+        printf("setBlinkFrequency initialized\n");
     }
 
     if (digitalRead(BUTTON_UP_PIN) == LOW)
@@ -61,6 +66,7 @@ void setBlinkFrequency(void)
             if (blinkFrequency < MAXIMUM_BLINK_FREQUENCY)
             {
                 blinkFrequency++;
+                printf("Button UP pressed, blinkFrequency increased to %lu\n", blinkFrequency);
             }
             debounceTime = millis();
         }
@@ -72,6 +78,7 @@ void setBlinkFrequency(void)
             if (blinkFrequency > MINIMUM_BLINK_FREQUENCY)
             {
                 blinkFrequency--;
+                printf("Button DOWN pressed, blinkFrequency decreased to %lu\n", blinkFrequency);
             }
             debounceTime = millis();
         }
@@ -90,14 +97,20 @@ void setBlindFrequency(void)
     {
         setBlinkFrequency();
         setBlinkFrequencyTaskCounter = SET_BLINK_FREQUENCY_TASK_RECURRENCE;
+    }
+}
+
+void own_stdio_setup(void)
+{
+    // Implementation of own_stdio_setup
+    // Add the necessary code to initialize standard I/O
+}
+
 void idleTaskSetup(void)
 {
     // Initialize standard I/O
     own_stdio_setup();
 }
-{
-    own_stdio_setup();
-}}}
 
 void idleTask(void)
 {
@@ -108,11 +121,12 @@ void idleTask(void)
     {
         idleTaskSetup();
         needInit = false;
+        printf("idleTask initialized\n");
     }
 
     if (millis() >= nextTime)
     {
-        printf("Blink frequency: %d\n", blinkFrequency);
+        printf("Blink frequency: %lu\n", blinkFrequency);
         printf("Green LED state: %d\n", digitalRead(LED_GREEN_PIN));
         nextTime = millis() + DATA_REFRESH;
     }

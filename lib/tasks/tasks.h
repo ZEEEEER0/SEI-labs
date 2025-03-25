@@ -1,5 +1,5 @@
-#ifndef TASK_H
-#define TASK_H
+#ifndef TASKS_H
+#define TASKS_H
 
 #include <Arduino.h>
 #include <config.h>
@@ -10,11 +10,11 @@
 
 
 void buttonLedTaskSetup(void);
-void buttonLedTask(void);
-void blinkLedTaskSetup(void);
-void blinkLedTask(void);
-void setBlinkFrequency(void);
+void setBlinkFrequencyTaskSetup(void);
 void idleTaskSetup(void);
+
+void buttonLedTask(void);
+void setBlinkFrequency(void);
 void idleTask(void);
 
 #endif // TASK_H

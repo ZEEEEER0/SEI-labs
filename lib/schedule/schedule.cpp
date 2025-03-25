@@ -1,25 +1,11 @@
-#include "schedule.h"
+#ifndef SCHEDULE_H
+#define SCHEDULE_H
 
-void scheduleSetup(void)
-{
-    timer_init_ISR_1KHz(TIMER_DEFAULT);
-}
+// Add your includes here
+#include "tasks.h"
 
-void scheduleLoop(void)
-{
-    static uint32_t buttonLedTaskCounter = BUTTON_LED_TASK_OFFSET;
+void scheduleSetup();
+void scheduleLoop();
+void timer_handler_interrupt(int timer);
 
-    if (--buttonLedTaskCounter == 0)
-    {
-        buttonLedTask();
-        buttonLedTaskCounter = BUTTON_LEDD_TASK_RECURRENCE;
-    }   
-}
-
-void timer_handler_interrupt(int timer)
-{
-    if (timer == TIMER_DEFAULT)
-    {
-        scheduleLoop();
-    }
-}
+#endif // SCHEDULE_H
