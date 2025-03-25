@@ -1,133 +1,76 @@
 #include "tasks.h"
-#include "own_stdio.h"
-#include <Arduino.h>
-#include <stdint.h>
 
-static volatile uint32_t blinkFrequency;
-static volatile uint32_t blinkLedTaskCounter = BLINK_LED_TASK_OFFSET;
-
-void buttonLedTaskSetup(void)
+void systemSetup()
 {
-    pinMode(BUTTON_PIN, INPUT_PULLUP);
-    pinMode(LED_GREEN_PIN, OUTPUT);
+    xTaskCreate(resistorTask, "resistorTask", 128, NULL, RESISTOR_TASK_PRIORITY, NULL);
+    xTaskCreate(printTask, "printTask", 128, NULL, PRINT_TASK_PRIORITY, NULL);
+    xTaskCreate(plotterTask, "plotterTask", 128, NULL, PLOTTER_TASK_PRIORITY, NULL);
+    vTaskStartScheduler();
 }
 
-void buttonLedTask(void)
+void resistorTaskSetup(void)
 {
-    static uint8_t needInit = true;
-    static uint32_t debounceTime = 0;
+    analogSensorsSetup();
+}
+
+void resistorTask(void *pvParameters)
+{
+    uint8_t needInit = true;
+    TickType_t taskRecurence = 0;
 
     if (needInit)
     {
-        buttonLedTaskSetup();
+        resistorTaskSetup();
+        taskRecurence = xTaskGetTickCount();
         needInit = false;
-        printf("buttonLedTask initialized\n");
     }
 
-    if (digitalRead(BUTTON_PIN) == LOW)
+    while (true)
     {
-        if (millis() - debounceTime > 50) // assuming 50ms debounce interval
-        {
-            digitalWrite(LED_GREEN_PIN, !digitalRead(LED_GREEN_PIN));
-            debounceTime = millis();
-            printf("Button pressed, LED toggled\n");
-        }
-    }
-    else
-    {
-        debounceTime = millis();
+        analogSensorsRead();
+        xTaskDelayUntil(&taskRecurence, pdMS_TO_TICKS(RESISTOR_TASK_RECURENCE));
     }
 }
-
-void setBlinkFrequencyTaskSetup(void)
+void printTaskSetup(void)
 {
-    blinkFrequency = DEFAULT_BLINK_FREQUENCY;
-
-    pinMode(BUTTON_UP_PIN, INPUT_PULLUP);
-    pinMode(BUTTON_DOWN_PIN, INPUT_PULLUP);
 }
-
-void setBlinkFrequency(void)
+void printTask(void *pvParameters)
 {
-    static uint8_t needInit = true;
-    static uint32_t debounceTime = 0;
+    uint8_t needInit = true;
+    TickType_t taskRecurence = 0;
 
     if (needInit)
     {
-        setBlinkFrequencyTaskSetup();
+        printTaskSetup();
+        taskRecurence = xTaskGetTickCount();
         needInit = false;
-        printf("setBlinkFrequency initialized\n");
     }
 
-    if (digitalRead(BUTTON_UP_PIN) == LOW)
+    while (true)
     {
-        if (millis() - debounceTime > 50) // assuming 50ms debounce interval
-        {
-            if (blinkFrequency < MAXIMUM_BLINK_FREQUENCY)
-            {
-                blinkFrequency++;
-                printf("Button UP pressed, blinkFrequency increased to %lu\n", blinkFrequency);
-            }
-            debounceTime = millis();
-        }
-    }
-    else if (digitalRead(BUTTON_DOWN_PIN) == LOW)
-    {
-        if (millis() - debounceTime > 50) // assuming 50ms debounce interval
-        {
-            if (blinkFrequency > MINIMUM_BLINK_FREQUENCY)
-            {
-                blinkFrequency--;
-                printf("Button DOWN pressed, blinkFrequency decreased to %lu\n", blinkFrequency);
-            }
-            debounceTime = millis();
-        }
-    }
-    else
-    {
-        debounceTime = millis();
+        xTaskDelayUntil(&taskRecurence, pdMS_TO_TICKS(PRINT_TASK_RECURENCE));
     }
 }
 
-void setBlindFrequency(void)
+void plotterTask(void *pvParameters)
 {
-    static uint32_t setBlinkFrequencyTaskCounter = SET_BLINK_FREQUENCY_TASK_OFFSET;
-
-    if (--setBlinkFrequencyTaskCounter == 0)
-    {
-        setBlinkFrequency();
-        setBlinkFrequencyTaskCounter = SET_BLINK_FREQUENCY_TASK_RECURRENCE;
-    }
-}
-
-void own_stdio_setup(void)
-{
-    // Implementation of own_stdio_setup
-    // Add the necessary code to initialize standard I/O
-}
-
-void idleTaskSetup(void)
-{
-    // Initialize standard I/O
-    own_stdio_setup();
-}
-
-void idleTask(void)
-{
-    static uint8_t needInit = true;
-    static uint32_t nextTime = 0;
+    uint8_t needInit = true;
+    TickType_t taskRecurence = 0;
 
     if (needInit)
     {
-        idleTaskSetup();
+        plotterTaskSetup();
+        taskRecurence = xTaskGetTickCount();
         needInit = false;
-        printf("idleTask initialized\n");
     }
 
-    if (millis() >= nextTime)
+    while (true)
     {
-        printf("Blink frequency: %lu\n", blinkFrequency);
-        printf("Green LED state: %d\n", digitalRead(LED_GREEN_PIN));
-        nextTime = millis() + DATA_REFRESH;
+        xTaskDelayUntil(&taskRecurence, pdMS_TO_TICKS(PLOTTER_TASK_RECURENCE));
     }
+}
+
+void plotterTaskSetup(void)
+{
+    analogSensorsSetup();
 }

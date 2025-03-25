@@ -13,5 +13,6 @@
 #include "tasks.h"
 #include "schedule.h"
 #include "tasks.h"
+#include "resistor.h"
 
 #endif // MAIN_H
