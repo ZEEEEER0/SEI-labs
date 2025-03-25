@@ -1,11 +1,12 @@
 #include "main.h"
 
+
 void setup()
 {
-    systemSetup();
+    freeRTOSInit();
 }
 
 void loop()
 {
-    // ...existing code...
+
 }

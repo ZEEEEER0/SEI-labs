@@ -2,21 +2,18 @@
 #define TASKS_H
 
 #include <Arduino.h>
-#include <config.h>
-#include <stdio.h>
-#include"Arduino_FreeRTOS.h"
-#include"semphr.h"
-#include "queue.h"
+#include <Arduino_FreeRTOS.h>
+#include <semphr.h>
+#include <queue.h>
 
+#include "config.h"
 
+void freeRTOSInit(void);
 void buttonLedTaskSetup(void);
-void buttonLedTask(void *);
-void sincronTaskSetup(void);
-void sincronTask(void *pvParameters);
-void asincronTaskSetup(void);
-void asincronTask(void *pvParameters);
-void systemSetup(void);
-void systemLoop(void);
-
-
-#endif // TASK_H
+void buttonLedTask(void *pvParameters);
+void sincronizedTaskSetup(void);
+void sincronizedTask(void *pvParameters);
+void asyncTask(void *pvParameters);
+extern QueueHandle_t xBufferQueue;  // Coada pentru comunicarea între Task 2 și Task 3
+void asyncTask(void *pvParameters); // Declarația pentru Task 3
+#endif // MY_TASKS_H
