@@ -1,92 +1,125 @@
 #include "my_tasks.h"
 
+// Global objects
+static lightbulb_t lightbulb;
+static relay_t relay;
 
+
+
+// System setup function
 void systemSetup(void)
 {
-    xTaskCreate(resistorTAsk, "resistorTask", 128, NULL, RESISTOR_TASK_PRIORITY, NULL);
+    xTaskCreate(
+        lightbulbTask,
+        "Lightbulb Task",
+        LIGHTBULB_TASK_STACK_SIZE,
+        NULL,
+        LIGHTBULB_TASK_PRIORITY,
+        NULL
+    );
+}
 
-#ifdef PRINT_TASK_ACTIVE
-    xTaskCreate(printTask, "printTask", 128, NULL, PRINT_TASK_PRIORITY, NULL);
-#endif
+// System task
+void system_task(void *pvParameters)
+{
+    // Initialize the system
+    Serial.begin(BAUD_RATE);
+    Serial.println("System initialized");
 
-#ifdef PLOTTER_TASK_ACTIVE
-    xTaskCreate(plotterTask, "plotterTask", 128, NULL, PLOTTER_TASK_PRIORITY, NULL);
-#endif
+    // Create the lightbulb task
+    systemSetup();
 
+    // Start the FreeRTOS scheduler
     vTaskStartScheduler();
 }
 
-void resistorTaskSetup(void)
+// Lightbulb task setup
+void lightbulbTaskSetup(void *pvParameters)
 {
-    analogSensorsSetup();
+    // Initialize the lightbulb
+    lightbulb_init(&lightbulb, LIGHTBULB_ID, LIGHTBULB_NAME, 100, 1, NULL);
+
+    // Create the relay task
+    xTaskCreate(
+        relayTask,
+        "Relay Task",
+        RELAY_TASK_STACK_SIZE,
+        NULL,
+        RELAY_TASK_PRIORITY,
+        NULL
+    );
 }
 
-void resistorTAsk(void *pvParameters)
+// Lightbulb task
+void lightbulbTask(void *pvParameters)
 {
-    uint8_t needInit = true;
-    TickType_t taskRecurence = 0;
+    static uint8_t needInit = true;
+    TickType_t lastWakeTime = xTaskGetTickCount();
 
     if (needInit)
     {
-        resistorTaskSetup();
-        taskRecurence = xTaskGetTickCount();
+        lightbulbTaskSetup(NULL);
         needInit = false;
     }
 
-    while (true)
+    // Task loop (if needed)
+    while (1)
     {
-        analogSensorsRead();
-        xTaskDelayUntil(&taskRecurence, pdMS_TO_TICKS(RESISTOR_TASK_REC));
+        // Perform lightbulb-related operations
+        vTaskDelayUntil(&lastWakeTime, pdMS_TO_TICKS(1000)); // Example delay
     }
 }
 
-void printTaskSetup(void)
+// Relay task setup
+void relayTaskSetup(void *pvParameters)
+{
+    // Initialize the relay
+    relay_init(&relay, RELAY_ID, RELAY_NAME, RELAY_PIN, NULL);
+}
+
+// Relay task (if needed)
+void relayTask(void *pvParameters)
+{
+    // Task loop (if needed)
+    while (1)
+    {
+        // Perform relay-related operations
+        vTaskDelay(pdMS_TO_TICKS(1000)); // Example delay
+    }
+}
+
+// Inline function for controlling the relay
+inline void functieCapusa(uint8_t state)
+{
+    if (state == LIGHTBULB_ON)
+    {
+        relay_on(&relay);
+        return;
+    }
+    if (state == LIGHTBULB_OFF)
+    {
+        relay_off(&relay);
+        return;
+    }
+}
+
+// Interpreter task setup
+void interpreterTaskSetup(void)
 {
     own_stdio_setup();
+    interpreter_init(&lightbulb);
 }
 
-void printTask(void *pvParameters)
+// Idle hook function
+void vApplicationIdleHook(void)
 {
-    uint8_t needInit = true;
-    TickType_t taskRecurence = 0;
+    static uint8_t needInit = true;
 
     if (needInit)
     {
-        printTaskSetup();
-        taskRecurence = xTaskGetTickCount();
+        interpreterTaskSetup();
         needInit = false;
     }
 
-    while (true)
-    {
-        analogSensorsPrint();
-        xTaskDelayUntil(&taskRecurence, pdMS_TO_TICKS(PRINT_TASK_REC));
-    }
+    interpreter_loop();
 }
-
-void plotterTaskSetup(void)
-{
-    own_stdio_setup();
-}
-
-void plotterTask(void *pvParameters)
-{
-    uint8_t needInit = true;
-    TickType_t taskRecurence = 0;
-
-    if (needInit)
-    {
-        plotterTaskSetup();
-        taskRecurence = xTaskGetTickCount();
-        needInit = false;
-    }
-
-    while (true)
-    {
-        analogSensorsPlot();
-        xTaskDelayUntil(&taskRecurence, pdMS_TO_TICKS(PLOTTER_TASK_REC));
-    }
-}
-
-
-
