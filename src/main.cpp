@@ -1,11 +1,12 @@
-#include <main.h>
+#include "main.h"
 
-void setup(void) 
+
+void setup()
 {
     systemSetup();
 }
 
-void loop(void) 
+void loop()
 {
-    // Empty
+
 }
