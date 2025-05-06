@@ -41,7 +41,7 @@ void lightbulb_set_state(lightbulb_t *lightbulb, lightbulb_state_t state) {
     }
 }
 
-void lightbulb_get_state(lightbulb_t *lightbulb) {
+lightbulb_state_t lightbulb_fetch_state(lightbulb_t *lightbulb) {
     return lightbulb->state;
 }
 
@@ -76,7 +76,7 @@ void lightbulb_set_luminosity(lightbulb_t *lightbulb, int8_t luminosity) {
         return;
     }
 
-    luminosity = lightbulb_luminosity_constraint(lightbulb);
+    luminosity = lightbulb_luminosity_constraint(luminosity);
     lightbulb->luminosity = luminosity;
     lightbulb->was_changed = true; // Set was_changed to true when the luminosity changes
     if (lightbulb->state == LIGHTBULB_ON) {
@@ -101,7 +101,7 @@ void lightbulb_loop(lightbulb_t *lightbulb, uint8_t state) {
             return; // Error: set_light function is NULL
         }
 
-        lightbulb->state = state;
+        lightbulb->state = static_cast<lightbulb_state_t>(state);
         if (state == LIGHTBULB_ON && lightbulb->dimmable == 1) {
             lightbulb->set_light(lightbulb->luminosity);
         } else {

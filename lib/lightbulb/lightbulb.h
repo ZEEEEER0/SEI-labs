@@ -44,5 +44,6 @@ int8_t lightbulb_init(lightbulb_t *lightbulb, uint8_t id, char *name, uint8_t lu
 void lightbulb_set_pin(lightbulb_t *lightbulb, uint8_t pin);
 uint8_t lightbulb_get_pin(lightbulb_t *lightbulb);
 void lightbulb_loop(lightbulb_t *lightbulb, uint8_t state);
+void lightbulb_update_state(lightbulb_t *lightbulb);
 
 #endif // LIGHTBULB_H

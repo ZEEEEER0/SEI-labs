@@ -36,7 +36,7 @@ const char *help_message = "Available commands:\n"
                             "4. relay set <parameter>\n"
                             "5. relay get <parameter>\n"
                             "6. relay status\n";
-    command = INVALID_COMMAND;
+    uint8_t command = INVALID_COMMAND; // Declare 'command' with an appropriate type
 
 
 
@@ -48,7 +48,7 @@ const char *get_command_string(uint8_t command) {
     }
 }
 
-void (*command_handlers[])(uint8_t) = {
+void (*command_handlers[])(lightbulb_t *) = {
     lightbulb_on,
     lightbulb_off,
     lightbulb_toggle,
