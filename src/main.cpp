@@ -1,12 +1,10 @@
-#include "main.h"
+#include <Arduino.h>
+#include <app.h>
 
-
-void setup()
-{
-    systemSetup();
+void setup() {
+    app_setup();
 }
 
-void loop()
-{
-
+void loop() {
+    app_loop();
 }

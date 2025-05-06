@@ -4,25 +4,20 @@
 #define HIGH 1
 
 int8_t relay_init(relay_t *relay, uint8_t id, char *name, uint8_t pin, void (*set_pin)(uint8_t pin, uint8_t state)) {
+    if (relay == NULL || set_pin == NULL) {
+        return -1; // Error: relay or set_pin function is NULL
+    }
     relay->id = id;
     relay->name = name;
     relay->pin = pin;
     relay->state = RELAY_OFF;
     relay->set_pin = set_pin;
-    if (relay == NULL || relay->set_pin == NULL) {
-        return -1; // Error: relay is NU
-}
-    relay ->id = id;
-    relay ->name = name;
-    relay ->pin = pin;
-    relay ->state = RELAY_OFF;
-    relay ->set_pin = set_pin;
     relay->set_pin(relay->pin, LOW); // Initialize the relay to OFF state
     return 0; // Success
-    }
+}
 
 void relay_on(relay_t *relay) {
-    if (relay->set_pin == NULL){
+    if (relay == NULL || relay->set_pin == NULL){
         return; 
     }
     relay->state = RELAY_ON_COMMAND;
@@ -30,11 +25,17 @@ void relay_on(relay_t *relay) {
 }
 
 void relay_off(relay_t *relay) {
+    if (relay == NULL || relay->set_pin == NULL) {
+        return;
+    }
     relay->state = RELAY_OFF;
     relay->set_pin(relay->pin, LOW);
 }
 
 void relay_toggle(relay_t *relay) {
+    if (relay == NULL || relay->set_pin == NULL) {
+        return;
+    }
     if (relay->state == RELAY_OFF) {
         relay_on(relay);
     } else {
@@ -43,6 +44,9 @@ void relay_toggle(relay_t *relay) {
 }
 
 void relay_set_state(relay_t *relay, relay_state_t state) {
+    if (relay == NULL) {
+        return;
+    }
     if (state == RELAY_ON_COMMAND) {
         relay_on(relay);
     } else {
@@ -51,26 +55,43 @@ void relay_set_state(relay_t *relay, relay_state_t state) {
 }
 
 relay_state_t relay_get_state(relay_t *relay) {
+    if (relay == NULL) {
+        return RELAY_OFF; // Default to RELAY_OFF if relay is NULL
+    }
     return relay->state;
 }
 
 void relay_set_name(relay_t *relay, char *name) {
+    if (relay == NULL) {
+        return;
+    }
     relay->name = name;
 }
 
 void relay_set_pin(relay_t *relay, uint8_t pin) {
+    if (relay == NULL) {
+        return;
+    }
     relay->pin = pin;
 }
 
 const char *relay_get_name(relay_t *relay) {
+    if (relay == NULL) {
+        return NULL; // Or some error string
+    }
     return relay->name;
 }
 
 uint8_t relay_get_pin(relay_t *relay) {
+    if (relay == NULL) {
+        return 0; // Or some error indicator
+    }
     return relay->pin;
 }
 
 void relay_set_pin_state(relay_t *relay, uint8_t state) {
+    if (relay == NULL || relay->set_pin == NULL) {
+        return;
+    }
     relay->set_pin(relay->pin, state);
 }
-
