@@ -1,98 +1,104 @@
 #include "my_tasks.h"
 
+// --- Configurare pini L298 ---
+#define L298_IN1 7
+#define L298_IN2 6
+#define L298_EN  5
+
+static int8_t motor_power = 0; // [-100, 100]
+static int8_t last_reported_power = -127;
+
+void motorSetup(void) {
+    motor.stop();
+}
+
+static void motorApply(int8_t power) {
+    power = constrain(power, -100, 100);
+    if (power == 0) {
+        digitalWrite(L298_IN1, LOW);
+        digitalWrite(L298_IN2, LOW);
+        analogWrite(L298_EN, 0);
+    } else if (power > 0) {
+        digitalWrite(L298_IN1, HIGH);
+        digitalWrite(L298_IN2, LOW);
+        analogWrite(L298_EN, map(power, 0, 100, 0, 255));
+    } else {
+        digitalWrite(L298_IN1, LOW);
+        digitalWrite(L298_IN2, HIGH);
+        analogWrite(L298_EN, map(-power, 0, 100, 0, 255));
+    }
+    motor_power = power;
+}
+
+void motorParseCommand(const char *command) {
+    int val;
+    if (sscanf(command, "motor set %d", &val) == 1) {
+        val = constrain(val, -100, 100);
+        motor.setPower(val); // Folosește driverul L298 corect
+        printf("Motor set to %d%%\n", val);
+    } else if (strcmp(command, "motor stop") == 0) {
+        motor.stop();
+        printf("Motor stopped\n");
+    } else if (strcmp(command, "motor max") == 0) {
+        int8_t cur = motor.getPower();
+        if (cur >= 0)
+            motor.setPower(100);
+        else
+            motor.setPower(-100);
+        printf("Motor set to max (%d%%)\n", motor.getPower());
+    } else if (strcmp(command, "motor inc") == 0) {
+        int8_t cur = motor.getPower();
+        int8_t new_power = cur + (cur >= 0 ? 10 : -10);
+        if (cur == 0) new_power = 10;
+        new_power = constrain(new_power, -100, 100);
+        motor.setPower(new_power);
+        printf("Motor increased to %d%%\n", motor.getPower());
+    } else if (strcmp(command, "motor dec") == 0) {
+        int8_t cur = motor.getPower();
+        int8_t new_power = cur - (cur > 0 ? 10 : (cur < 0 ? -10 : 0));
+        if (cur == 0) new_power = -10;
+        new_power = constrain(new_power, -100, 100);
+        if (cur > 0 && new_power < 0) new_power = 0;
+        if (cur < 0 && new_power > 0) new_power = 0;
+        motor.setPower(new_power);
+        printf("Motor decreased to %d%%\n", motor.getPower());
+    } else if (strcmp(command, "motor state") == 0) {
+        motorReport();
+    }
+}
+
+void motorReport(void) {
+    printf("Motor: %s, Power: %d%%\n", motor.getDirection(), motor.getPower());
+}
+
+// --- Integrare cu sistemul existent ---
+
 void systemSetup()
 {
     own_stdio_setup();
-    printf("Sistem Started!\r\n");
+    printf("Sistem Started!\n");
+    motorSetup();
 }
-
-bool redRelayControl(const char *command)
-{
-    if (!strcmp(command, "red"))
-    {
-        red.control(TOGGLE);
-        printf("red status: %d\r\n", red.getState());
-        return 1;
-    }
-    else if (!strcmp(command, "red_state"))
-    {
-        printf("red status: %d\r\n", red.getState());
-        return 1;
-    }
-    return 0;
-}
-
-bool greenRelayControl(const char *command)
-{
-    if (!strcmp(command, "green"))
-    {
-        green.control(TOGGLE);
-        printf("green status: %d\r\n", green.getState());
-        return 1;
-    }
-    else if (!strcmp(command, "green_state"))
-    {
-        printf("green status: %d\r\n", green.getState());
-        return 1;
-    }
-    return 0;
-}
-
-bool blueRelayControl(const char *command)
-{
-    if (!strcmp(command, "blue"))
-    {
-        blue.control(TOGGLE);
-        printf("blue status: %d\r\n", blue.getState());
-        return 1;
-    }
-    else if (!strcmp(command, "blue_state"))
-    {
-        printf("blue status: %d\r\n", blue.getState());
-        return 1;
-    }
-    return 0;
-}   
 
 void getHelp(void)
 {
-  printf("Available commands:\r\n");
-  printf("```General```\r\n");
-  printf("sys_state: show all relay state\r\n");
-  printf("```Red```\r\n");
-  printf("red: Toggle red relay\r\n");
-  printf("red_state: Get red relay state\r\n");
-  printf("```Green```\r\n");
-  printf("green: Toggle green relay\r\n");
-  printf("green_state: Get green relay status\r\n");
-  printf("```Blue```\r\n");
-  printf("blue: Toggle blue relay\r\n");
-  printf("blue_state: Get blue relay status\r\n");
-  printf("```End```\r\n");
+  printf("Available commands:\n");
+  printf("motor set [-100..100] : Set motor power and direction\n");
+  printf("motor stop            : Stop motor\n");
+  printf("motor max             : Set max power in current direction\n");
+  printf("motor inc             : Increase power by 10%%\n");
+  printf("motor dec             : Decrease power by 10%%\n");
+  printf("motor state           : Show current motor state\n");
+  printf("help                  : Show this help\n");
 }
 
 void parsing(const char *command)
 {
-    static bool err1 = 0;
-    static bool err2 = 0;
-    static bool err3 = 0;
-
-    err1 = redRelayControl(command);
-    err2 = greenRelayControl(command);
-    err3 = blueRelayControl(command);
-
-    if (!strcmp(command, "help"))
-    {
+    if (strncmp(command, "motor", 5) == 0) {
+        motorParseCommand(command);
+    } else if (!strcmp(command, "help")) {
         getHelp();
-    }
-    else if (!strcmp(command, "sys_state"))
-    {
-        redRelayControl("red_state");
-        greenRelayControl("green_state");
-        blueRelayControl("blue_state");
-    }
-    else if (err1 && err2 && err3)
-    {
-        printf("Unknown command. Type 'help' for a list of available commands.\r\n");
+    } else {
+        printf("Unknown command. Type 'help' for a list of available commands.\n");
     }
 }
