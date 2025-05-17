@@ -1,35 +1,46 @@
 #ifndef RELAY_H
 #define RELAY_H
 
+#include <Arduino.h>
 #include <stdint.h>
 #include <stdlib.h>
 
-typedef enum{
-    RELAY_OFF = 0u,
-    RELAY_ON_COMMAND 
-}relay_state_t;
+#define NOTSET 0
+#define SET 1
 
-typedef struct {
-    uint8_t id;
-    char *name;
+enum RelayControl
+{
+    ENABLE,
+    DISABLE,
+    TOGGLE,
+};
 
-    uint8_t pin; 
-    relay_state_t state; 
-    void (*set_pin)(uint8_t pin, uint8_t state); // function pointer to set pin state
+enum RelayState
+{
+    ENABLED = HIGH,
+    DISABLED = LOW,
+};
 
-}relay_t;
+class Relay
+{
+public:
+    Relay(uint8_t id, const char* name, uint8_t pin, RelayState state = DISABLED);
 
-void relay_on                           (relay_t *relay);
-void relay_off                          (relay_t *relay);
-void relay_toggle                       (relay_t *relay);
-void relay_set_state                    (relay_t *relay, relay_state_t state);
-relay_state_t relay_get_state           (relay_t *relay);
-void relay_set_name                     (relay_t *relay, char *name);
-void relay_set_pin                      (relay_t *relay, uint8_t pin);
-const char *relay_get_name              (relay_t *relay);
-uint8_t relay_get_pin                   (relay_t *relay);
-int8_t relay_init                       (relay_t *relay, uint8_t id, char *name, uint8_t pin, void (*set_pin)(uint8_t pin, uint8_t state));
+    RelayState getState();                  //done
+    const char *getName();                  //done
+    uint8_t getPin();                       //done
+
+    void control(RelayControl command);     //done
 
 
+private:
+
+    void set(RelayState state);             //done
+
+    uint8_t __id;
+    uint8_t __pin;
+    const char *__name;
+    RelayState __state;
+};
 
 #endif // RELAY_H

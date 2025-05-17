@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "author": "Catalin Cechin",
+  "author": "Railean Alexandru",
   "editor": "wokwi",
   "parts": [
     {
@@ -11,12 +11,59 @@
       "rotate": 90,
       "attrs": {}
     },
-    { "type": "wokwi-potentiometer", "id": "pot1", "top": -10.9, "left": 201.4, "attrs": {} }
+    { "type": "wokwi-relay-module", "id": "relay1", "top": -19, "left": 211.2, "attrs": {} },
+    {
+      "type": "wokwi-rgb-led",
+      "id": "rgb1",
+      "top": 33.6,
+      "left": 399.3,
+      "rotate": 90,
+      "attrs": { "common": "cathode" }
+    },
+    { "type": "wokwi-relay-module", "id": "relay2", "top": 48.2, "left": 211.2, "attrs": {} },
+    { "type": "wokwi-relay-module", "id": "relay3", "top": 115.4, "left": 211.2, "attrs": {} },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 186.35,
+      "left": 249.6,
+      "attrs": { "value": "320" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": 205.55,
+      "left": 249.6,
+      "attrs": { "value": "320" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r3",
+      "top": 224.75,
+      "left": 249.6,
+      "attrs": { "value": "320" }
+    }
   ],
   "connections": [
-    [ "pot1:SIG", "mega:A0", "green", [ "v259.2", "h-336.4", "v-211.2" ] ],
-    [ "pot1:GND", "mega:GND.1", "black", [ "v19.2", "h-86.4", "v-9.6" ] ],
-    [ "pot1:VCC", "mega:5V.1", "red", [ "v0" ] ]
+    [ "mega:GND.1", "relay1:GND", "black", [ "h0" ] ],
+    [ "mega:5V.1", "relay1:VCC", "red", [ "v-2.2", "h66.2", "v-249.6" ] ],
+    [ "relay1:IN", "mega:13", "orange", [ "h0" ] ],
+    [ "rgb1:B", "relay3:NO", "blue", [ "h0", "v59.2" ] ],
+    [ "relay1:GND", "rgb1:COM", "black", [ "h-38.4", "v-38.8", "h182.4", "v96" ] ],
+    [ "relay2:VCC", "mega:5V.1", "red", [ "h-28.8", "v182.4" ] ],
+    [ "relay3:VCC", "mega:5V.1", "red", [ "h-28.8", "v115.2" ] ],
+    [ "relay3:GND", "mega:GND.1", "black", [ "h-38.4", "v-134.8" ] ],
+    [ "relay2:GND", "mega:GND.1", "black", [ "h-38.4", "v-67.6" ] ],
+    [ "relay2:IN", "mega:12", "green", [ "h-48", "v-57.8", "h-48" ] ],
+    [ "relay3:IN", "mega:11", "blue", [ "h-57.6", "v-115.4" ] ],
+    [ "r1:2", "relay3:COM", "red", [ "v0", "h46.8", "v-48" ] ],
+    [ "r2:2", "relay2:COM", "red", [ "h56.4", "v-133" ] ],
+    [ "r3:2", "relay1:COM", "red", [ "v0", "h66", "v-220.8" ] ],
+    [ "rgb1:G", "relay2:NO", "green", [ "v1.3", "h-19.2", "v9.6" ] ],
+    [ "r3:1", "mega:5V.1", "red", [ "v0", "h-67.2", "v19.2" ] ],
+    [ "r2:1", "mega:5V.1", "red", [ "v0", "h-67.2", "v38.4" ] ],
+    [ "r1:1", "mega:5V.1", "red", [ "v0", "h-67.2", "v57.6" ] ],
+    [ "relay1:NO", "rgb1:R", "orange", [ "h0" ] ]
   ],
   "dependencies": {}
 }

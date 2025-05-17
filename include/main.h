@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <my_tasks.h>
+#include "config.h"
 
 void setup();
 void loop();

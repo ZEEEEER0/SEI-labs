@@ -4,18 +4,13 @@
 #include <Arduino.h>
 #include <config.h>
 #include <own_stdio.h>
-#include <Arduino_FreeRTOS.h>
-#include <task.h>
-#include <interpreter.h>
-#include <lightbulb.h>
+#include "relay.h"
 
-// Function prototypes
+static Relay red = Relay(RELAY_ID_RED, RELAY_NAME_RED, RELAY_PIN_RED);
+static Relay green = Relay(RELAY_ID_GREEN, RELAY_NAME_GREEN, RELAY_PIN_GREEN);
+static Relay blue = Relay(RELAY_ID_BLUE, RELAY_NAME_BLUE, RELAY_PIN_BLUE);
+
 void systemSetup(void);
-void lightbulbTaskSetup(void *pvParameters);
-void relayTaskSetup(void *pvParameters);
-void interpreterTaskSetup(void);
-void lightbulbTask(void *pvParameters);
-void relayTask(void *pvParameters);
+void parsing(const char *command);
 
-
-#endif // MY_TASKS_H
+#endif // MY_TASKS
