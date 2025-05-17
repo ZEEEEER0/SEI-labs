@@ -3,14 +3,14 @@
   "author": "Anonymous maker",
   "editor": "wokwi",
   "parts": [
-    { "type": "wokwi-arduino-mega", "id": "mega", "top": 77.4, "left": 44.4, "attrs": {} },
+    { "type": "wokwi-arduino-mega", "id": "mega", "top": 81.69, "left": 48.95, "attrs": {} },
     {
       "type": "wokwi-pushbutton",
       "id": "btn1",
-      "top": -60.51,
-      "left": 350.66,
+      "top": -57.7,
+      "left": 349.1,
       "rotate": 90,
-      "attrs": { "color": "red" }
+      "attrs": { "color": "yellow" }
     },
     {
       "type": "wokwi-led",
@@ -29,31 +29,31 @@
     {
       "type": "wokwi-pushbutton",
       "id": "btn2",
-      "top": -60.84,
-      "left": 412.92,
+      "top": -57.7,
+      "left": 406.7,
       "rotate": 90,
-      "attrs": { "color": "black" }
+      "attrs": { "color": "red" }
     },
     {
       "type": "wokwi-pushbutton",
       "id": "btn3",
-      "top": -67.8,
-      "left": 291,
+      "top": -57.7,
+      "left": 291.5,
       "rotate": 90,
-      "attrs": { "color": "green" }
+      "attrs": { "color": "grey" }
     }
   ],
   "connections": [
     [ "led1:A", "mega:7", "green", [ "v0" ] ],
     [ "led2:A", "mega:6", "blue", [ "v36.64", "h-24.76" ] ],
-    [ "mega:4", "btn1:2.r", "orange", [ "v-23.66", "h111.8", "v-20.87", "h0.03" ] ],
-    [ "btn2:2.r", "mega:3", "gray", [ "v21.81", "h-34.65", "v27.64", "h-129.94" ] ],
     [ "mega:GND.1", "led1:C", "black", [ "v0" ] ],
     [ "led1:C", "led2:C", "black", [ "v15.98", "h28.99" ] ],
-    [ "btn3:1.r", "mega:5", "green", [ "v48.2", "h-77.55" ] ],
-    [ "mega:GND.5", "btn2:1.r", "black", [ "v0.95", "h45.4" ] ],
-    [ "btn2:1.l", "btn1:1.l", "green", [ "v-26.16", "h-54.72" ] ],
-    [ "btn1:1.l", "btn3:2.l", "green", [ "v-26.49", "h-78.86" ] ]
+    [ "btn3:2.r", "mega:5", "gray", [ "v38.6", "h-57.8" ] ],
+    [ "mega:4", "btn1:2.r", "gold", [ "v-42.69", "h96.85" ] ],
+    [ "mega:3", "btn2:2.r", "red", [ "v-33.09", "h144.95" ] ],
+    [ "btn3:1.l", "btn1:1.l", "black", [ "v-19.2", "h57.6" ] ],
+    [ "btn2:1.l", "btn1:1.l", "black", [ "v-19.2", "h-57.6" ] ],
+    [ "btn2:1.r", "mega:GND.5", "black", [ "v0" ] ]
   ],
   "dependencies": {}
 }

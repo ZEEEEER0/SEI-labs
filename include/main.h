@@ -2,10 +2,10 @@
 #define MAIN_H
 
 #include <Arduino.h>
-#include <string.h>
-#include "config.h"
+#include "my_task.h"
 #include "own_stdio.h"
-#include "timer-api.h"
-#include "scheduler.h"
+
+uint8_t globalCounter = 2;
+uint8_t bufferCounter = 0;
 
 #endif
