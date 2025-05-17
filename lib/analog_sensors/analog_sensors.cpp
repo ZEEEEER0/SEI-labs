@@ -32,7 +32,7 @@ void analogSensorsRead(void)
 
 void analogSensorsPrint(void)
 {
-    double voltage = analogSensorsConvertToVoltage(resistanceValueFinal);
+    double voltage = analogSensorsConvertToVoltage(getResistanceRaw(&resistor));
     double resistance = resistorConvertToResistance(&resistor, voltage, ADC_REF_VOLTAGE);
 
     char buffer[10];
@@ -44,9 +44,9 @@ void analogSensorsPlot(void)
 {
     resistanceValueFiltered = MeanFilterGetMean(&meanFilter);
 
-    printf("resistance:%d,", getResistanceRaw(&resistor));
-    printf("resistancefiltered:%d,", resistanceValueFiltered);
-    printf("resistancefinal:%d\n", resistanceValueFiltered);
+    printf("ADC Vale:%d,", getResistanceRaw(&resistor));
+    printf("ADC MedianFiltered:%d,", MEDIANFILTER_Insert(&medianFilter, getResistanceRaw(&resistor)));
+    printf("ADC MeanFinal:%d\n", resistanceValueFiltered);
 }
 
 double analogSensorsConvertToVoltage(uint16_t value)

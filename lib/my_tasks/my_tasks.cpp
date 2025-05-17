@@ -5,11 +5,11 @@ void systemSetup(void)
 {
     xTaskCreate(resistorTAsk, "resistorTask", 128, NULL, RESISTOR_TASK_PRIORITY, NULL);
 
-#ifdef PRINT_TASK_ACTIVE
+#if PRINT_TASK_ACTIVE == 1
     xTaskCreate(printTask, "printTask", 128, NULL, PRINT_TASK_PRIORITY, NULL);
 #endif
 
-#ifdef PLOTTER_TASK_ACTIVE
+#if PLOTTER_TASK_ACTIVE == 1
     xTaskCreate(plotterTask, "plotterTask", 128, NULL, PLOTTER_TASK_PRIORITY, NULL);
 #endif
 

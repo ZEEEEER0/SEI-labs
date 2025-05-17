@@ -18,6 +18,7 @@ double resistorConvertToResistance(resistor_t *resistor,const double voltage, co
 {
     return (resistor->max_value * voltage) / adc_reference_voltage;
 }
+
 void resistorRead(resistor_t *resistor, uint16_t (*analogRead)(uint8_t))
 {
     resistor->value = analogRead(resistor->pin);

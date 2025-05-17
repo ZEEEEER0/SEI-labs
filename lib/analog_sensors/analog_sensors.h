@@ -1,5 +1,6 @@
 #ifndef ANALOG_SENSORS_H
 #define ANALOG_SENSORS_H
+
 #include "resistor.h"
 #include "config.h"
 #include <Arduino.h>
