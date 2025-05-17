@@ -12,18 +12,8 @@
 #define LIGHTBULB_ID 0u
 #define LIGHTBULB_NAME "Lightbulb"
 
-// Relay settings
-#define RELAY_PIN 2
-#define RELAY_ID 0u
-#define RELAY_NAME "Relay"
-#define RELAY_TASK_STACK_SIZE 256
-#define RELAY_TASK_PRIORITY 1
-
 // Potentiometer settings
 #define POT_PIN A0
-
-// Hysteresis settings
-#define HYSTERESIS_VALUE 50
 
 // LCD settings
 #define LCD_I2C_ADDRESS 0x27
@@ -44,8 +34,24 @@
 #define SET_POINT_MIN 0
 #define SET_POINT_MAX 1023
 
-// Additional pins (if needed for other peripherals)
+// Additional pins
 #define BUZZER_PIN 4
 #define LED_PIN 13
+
+// PID tuning parameters
+#define PID_KP 2.0
+#define PID_KI 5.0
+#define PID_KD 1.0
+
+// Humidity control settings
+#define HUMIDITY_SETPOINT_DEFAULT 50.0 // Default humidity set point (%)
+#define DHTPIN 2 // Pinul conectat la DHT22
+#define DHTTYPE DHT22 // Tipul senzorului DHT
+
+// Serial Plotter settings
+#define SERIAL_PLOTTER_BAUD_RATE 115200
+
+// Fan control settings
+#define FAN_PWM_PIN 3 // Pinul PWM pentru ventilator
 
 #endif // CONFIG_H

@@ -16,7 +16,7 @@ int own_getchar(FILE *stream)
 
 void own_stdio_setup()
 {
-    Serial.begin(BAUD_RATE);
+    Serial.begin(SERIAL_PLOTTER_BAUD_RATE); // Use defined baud rate
     
     fdev_setup_stream(&stream, own_putchar, own_getchar, _FDEV_SETUP_RW);
     stdin = stdout = &stream;

@@ -6,17 +6,79 @@
     {
       "type": "wokwi-arduino-mega",
       "id": "mega",
-      "top": -11.2,
-      "left": -165.8,
+      "top": 8,
+      "left": -204.2,
       "rotate": 90,
       "attrs": {}
     },
-    { "type": "wokwi-potentiometer", "id": "pot1", "top": -10.9, "left": 201.4, "attrs": {} }
+    { "type": "wokwi-dht22", "id": "dht1", "top": -18.9, "left": 157.8, "attrs": {} },
+    { "type": "wokwi-fan", "id": "fan1", "top": 100, "left": 150, "attrs": {} },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "pot1",
+      "top": 318.9,
+      "left": 164.2,
+      "rotate": 180,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "button_inc",
+      "top": 121.4,
+      "left": 249.6,
+      "rotate": 90,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "button_dec",
+      "top": 124.2,
+      "left": 348.6,
+      "rotate": 90,
+      "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "button_reset",
+      "top": 121.4,
+      "left": 441.6,
+      "rotate": 90,
+      "attrs": { "color": "blue" }
+    },
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd2",
+      "top": -118.4,
+      "left": 312.8,
+      "attrs": { "pins": "i2c" }
+    }
   ],
   "connections": [
-    [ "pot1:SIG", "mega:A0", "green", [ "v259.2", "h-336.4", "v-211.2" ] ],
-    [ "pot1:GND", "mega:GND.1", "black", [ "v19.2", "h-86.4", "v-9.6" ] ],
-    [ "pot1:VCC", "mega:5V.1", "red", [ "v0" ] ]
+    [ "dht1:VCC", "mega:5V.1", "red", [ "v0" ] ],
+    [ "fan1:SIG", "mega:3", "blue", [ "v0" ] ],
+    [ "button_dec:1", "mega:31", "green", [ "v0" ] ],
+    [ "button_dec:2", "mega:GND.1", "black", [ "v0" ] ],
+    [ "fan1:VCC", "mega:5V.1", "red", [ "v0" ] ],
+    [ "fan1:GND", "mega:GND.1", "black", [ "v0" ] ],
+    [ "pot1:VCC", "mega:5V.1", "red", [ "v0" ] ],
+    [ "pot1:GND", "mega:GND.1", "black", [ "v-144", "h-134.4" ] ],
+    [ "pot1:SIG", "mega:A0", "green", [ "h-162.8", "v19.2", "h-137.1" ] ],
+    [ "button_inc:1", "mega:30", "green", [ "v0" ] ],
+    [ "button_inc:2", "mega:GND.1", "black", [ "v0" ] ],
+    [ "button_reset:1", "mega:32", "green", [ "v0" ] ],
+    [ "button_reset:2", "mega:GND.1", "black", [ "v0" ] ],
+    [ "button_inc:2.r", "mega:30", "green", [ "v252.6", "h-16.4" ] ],
+    [ "button_dec:2.r", "mega:31", "green", [ "v262.2", "h-170" ] ],
+    [ "button_reset:2.r", "mega:32", "green", [ "v271.8", "h-189.2" ] ],
+    [ "button_inc:2.l", "mega:GND.5", "green", [ "v2.8", "h-16.4", "v307.2", "h-355.2" ] ],
+    [ "button_dec:2.l", "mega:GND.5", "green", [ "v2.8", "h-19.4", "v307.2", "h-450.25" ] ],
+    [ "button_reset:2.l", "mega:GND.5", "green", [ "v2.8", "h-16.4", "v326.4", "h-537.6" ] ],
+    [ "lcd2:GND", "mega:GND.4", "black", [ "h-441.6", "v124.8" ] ],
+    [ "lcd2:VCC", "mega:5V", "red", [ "h-460.8", "v134.5" ] ],
+    [ "lcd2:SDA", "mega:SDA", "green", [ "h-220.8", "v67.4" ] ],
+    [ "lcd2:SCL", "mega:SCL", "green", [ "h-211.2", "v57.9" ] ],
+    [ "dht1:GND", "mega:GND.1", "black", [ "v19.2", "h-96", "v-134.4" ] ],
+    [ "mega:2", "dht1:SDA", "green", [ "h0" ] ]
   ],
   "dependencies": {}
 }
