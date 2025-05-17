@@ -1,12 +1,23 @@
 #include "main.h"
 
-void setup(void)
-{
-  own_stdio_setup();
-  Serial.println("System started\n");
-}  
 
-void loop(void)
+void setup()
 {
-  // Your code here
+    systemSetup();
+}
+
+void loop()
+{
+
+}
+
+void serialEvent(void)
+{
+  char command[15] = {0};
+  printf("Enter command:\r\n");
+  scanf("%15s", command);
+
+  printf("%s\r\n", command);
+  
+  parsing(command);
 }

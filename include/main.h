@@ -1,10 +1,11 @@
 #ifndef MAIN_H
 #define MAIN_H
-#include "own_stdio.h"
-// Include necessary libraries
+
 #include <Arduino.h>
-#include <config.h>
+#include <my_tasks.h>
+#include "config.h"
 
-
+void setup();
+void loop();
 
 #endif // MAIN_H
