@@ -25,11 +25,6 @@
 #define MOTOR_IN1_PIN 7
 #define MOTOR_IN2_PIN 8
 
-// Button settings
-#define BUTTON_INC_PIN 30  // Pin pentru butonul de incrementare
-#define BUTTON_DEC_PIN 31  // Pin pentru butonul de decrementare
-#define BUTTON_RESET_PIN 32 // Pin pentru butonul de resetare
-
 // Set point adjustment limits
 #define SET_POINT_MIN 0
 #define SET_POINT_MAX 1023
@@ -39,19 +34,37 @@
 #define LED_PIN 13
 
 // PID tuning parameters
-#define PID_KP 2.0
-#define PID_KI 5.0
-#define PID_KD 1.0
+#define PID_KP 10.0
+#define PID_KI 0.5
+#define PID_KD 0.1
 
 // Humidity control settings
 #define HUMIDITY_SETPOINT_DEFAULT 50.0 // Default humidity set point (%)
-#define DHTPIN 2 // Pinul conectat la DHT22
-#define DHTTYPE DHT22 // Tipul senzorului DHT
+#define DHTPIN 2 // Pinul conectat la DHT
+#define DHTTYPE DHT11 // Tipul senzorului DHT
 
 // Serial Plotter settings
 #define SERIAL_PLOTTER_BAUD_RATE 115200
 
-// Fan control settings
-#define FAN_PWM_PIN 3 // Pinul PWM pentru ventilator
+// Conectare pini Arduino Mega2560
+
+// DHT22 (umiditate/temperatură)
+// VCC  -> 5V
+// GND  -> GND
+// DATA -> Pin 2 (DHTPIN)
+
+// Potențiometru (pentru setpoint PID)
+// VCC  -> 5V
+// GND  -> GND
+// SIG  -> A0 (POT_PIN)
+
+// L298N (control motor DC)
+// ENA  -> Pin 9 (MOTOR_EN_PIN)  [PWM]
+// IN1  -> Pin 7 (MOTOR_IN1_PIN)
+// IN2  -> Pin 8 (MOTOR_IN2_PIN)
+// GND  -> GND
+// VCC  -> 5V sau sursă externă pentru motor
+
+
 
 #endif // CONFIG_H

@@ -3,21 +3,19 @@
 #include <config.h>
 
 // Motor pins
-const uint8_t IN1 = 7;
-const uint8_t IN2 = 8;
-const uint8_t EN = 9;
+const uint8_t IN1 = MOTOR_IN1_PIN;
+const uint8_t IN2 = MOTOR_IN2_PIN;
+const uint8_t EN = MOTOR_EN_PIN;
 
 // Motor instance
 L298N motor(EN, IN1, IN2);
 
 void motor_init(void) {
-    motor.setSpeed(128); // 50% power
-}
-
-void motor_control_callback(uint8_t state) {
-    if (state == 1) {
-        motor.forward();
-    } else {
-        motor.backward();
-    }
+    pinMode(MOTOR_IN1_PIN, OUTPUT);
+    pinMode(MOTOR_IN2_PIN, OUTPUT);
+    pinMode(MOTOR_EN_PIN, OUTPUT);
+    // Setează direcția implicită (ex: înainte)
+    digitalWrite(MOTOR_IN1_PIN, HIGH);
+    digitalWrite(MOTOR_IN2_PIN, LOW);
+    analogWrite(MOTOR_EN_PIN, 0); // Motor oprit la start
 }

@@ -2,92 +2,75 @@
 #include <config.h>
 #include <motor_control.h>
 #include <lcd_display.h>
-#include <sensor.h>
 #include <pid_control.h>
 #include <DHT.h>
-#include <own_stdio.h>
 
-// Variabile globale
-static uint16_t setPoint = 512; // Valoarea implicită
+// DHT setup
+DHT dht(DHTPIN, DHTTYPE);
 
 // PID control instance
 pid_control_t pid_control;
 
-// DHT sensor setup
-#define DHTPIN 2 // Pinul conectat la DHT22
-#define DHTTYPE DHT22
-DHT dht(DHTPIN, DHTTYPE);
-
-// PWM pin for fan control
-#define FAN_PWM_PIN 3
-
-void buttons_init() {
-    pinMode(BUTTON_INC_PIN, INPUT_PULLUP);
-    pinMode(BUTTON_DEC_PIN, INPUT_PULLUP);
-    pinMode(BUTTON_RESET_PIN, INPUT_PULLUP);
-}
-
-void buttons_process_input(uint16_t *setPoint, uint16_t min, uint16_t max) {
-    if (digitalRead(BUTTON_INC_PIN) == LOW) {
-        *setPoint = (*setPoint < max) ? (*setPoint + 1) : max;
-        delay(200); // Debounce delay
-    }
-    if (digitalRead(BUTTON_DEC_PIN) == LOW) {
-        *setPoint = (*setPoint > min) ? (*setPoint - 1) : min;
-        delay(200); // Debounce delay
-    }
-    if (digitalRead(BUTTON_RESET_PIN) == LOW) {
-        *setPoint = min; // Reset la valoarea minimă
-        delay(200); // Debounce delay
-    }
-}
-
 void app_setup() {
     Serial.begin(BAUD_RATE);
-    motor_init();
-    lcd_init(); // Inițializează LCD-ul
-    buttons_init(); // Inițializează butoanele
-
-    // Initialize DHT sensor
+    lcd_init();
     dht.begin();
-
-    // Initialize PID controller
+    pinMode(POT_PIN, INPUT);
+    motor_init();
+    // Setează pinii de direcție ca output
+    pinMode(MOTOR_IN1_PIN, OUTPUT);
+    pinMode(MOTOR_IN2_PIN, OUTPUT);
+    pinMode(MOTOR_EN_PIN, OUTPUT);
+    // LED pe pinul 13
+    pinMode(LED_PIN, OUTPUT);
+    // Setează direcția implicită (ex: înainte)
+    digitalWrite(MOTOR_IN1_PIN, HIGH);
+    digitalWrite(MOTOR_IN2_PIN, LOW);
+    delay(2000); // Stabilizare DHT
     pid_control_init(&pid_control, PID_KP, PID_KI, PID_KD);
-    pid_control_set_setpoint(&pid_control, HUMIDITY_SETPOINT_DEFAULT);
-
-    // Set PWM pin as output
-    pinMode(FAN_PWM_PIN, OUTPUT);
-
-    own_stdio_setup(); // Initialize STDIO for printf
+    pid_control_set_setpoint(&pid_control, 50.0); // Setpoint implicit 50%
 }
 
 void app_loop() {
-    // Read current humidity from DHT22
-    pid_control.Input = dht.readHumidity();
-    if (isnan(pid_control.Input)) {
+    // Citire setpoint din potentiometru (0-1023 -> 0-100%)
+    int potValue = analogRead(POT_PIN);
+    double setPoint = map(potValue, 0, 1023, 0, 100);
+    pid_control_set_setpoint(&pid_control, setPoint);
+
+    // Citire umiditate din DHT
+    double humidity = dht.readHumidity();
+    if (isnan(humidity)) {
         Serial.println("Failed to read from DHT sensor!");
+        delay(1000);
         return;
     }
+    pid_control.Input = humidity;
+    pid_control_set_setpoint(&pid_control, setPoint);
 
-    // Update PID controller
+    // Calcul PID
     pid_control_compute(&pid_control);
+    int pwm = (int)pid_control_get_output(&pid_control);
+    pwm = constrain(pwm, 0, 255);
 
-    // Control fan speed using PWM
-    analogWrite(FAN_PWM_PIN, (int)pid_control_get_output(&pid_control));
 
-    // Update LCD display
-    lcd_update_display(pid_control.SetPoint, pid_control.Input, pid_control.Output);
+    analogWrite(MOTOR_EN_PIN, pwm);
+    digitalWrite(MOTOR_IN1_PIN, HIGH);
+    digitalWrite(MOTOR_IN2_PIN, LOW);
 
-    // Send data to Serial Plotter
-    Serial.print("SetPoint: ");
-    Serial.print(pid_control.SetPoint);
-    Serial.print(" Input: ");
-    Serial.print(pid_control.Input);
-    Serial.print(" Output: ");
-    Serial.println(pid_control.Output);
+    // LED pe pinul 13: aprins dacă motorul funcționează (pwm > 0)
+    if (pwm > 0) {
+        digitalWrite(LED_PIN, HIGH);
+    } else {
+        digitalWrite(LED_PIN, LOW);
+    }
 
-    // Process button inputs
-    buttons_process_input(&setPoint, SET_POINT_MIN, SET_POINT_MAX);
+    // Actualizare LCD
+    lcd_update_display((uint16_t)setPoint, (uint16_t)humidity, pwm);
 
-    delay(100);
+    // Serial debug
+    Serial.print("SetPoint: "); Serial.print(setPoint);
+    Serial.print(" Humidity: "); Serial.print(humidity);
+    Serial.print(" PWM: "); Serial.println(pwm);
+
+    delay(200);
 }
