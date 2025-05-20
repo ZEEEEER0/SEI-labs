@@ -15,10 +15,9 @@
 // Potentiometer settings
 #define POT_PIN A0
 
-// LCD settings
-#define LCD_I2C_ADDRESS 0x27
-#define LCD_COLUMNS 16
-#define LCD_ROWS 2
+// OLED settings
+#define OLED_WIDTH 128
+#define OLED_HEIGHT 32
 
 // Motor control (L298N) settings
 #define MOTOR_EN_PIN 9

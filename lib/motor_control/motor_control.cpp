@@ -14,8 +14,5 @@ void motor_init(void) {
     pinMode(MOTOR_IN1_PIN, OUTPUT);
     pinMode(MOTOR_IN2_PIN, OUTPUT);
     pinMode(MOTOR_EN_PIN, OUTPUT);
-    // Setează direcția implicită (ex: înainte)
-    digitalWrite(MOTOR_IN1_PIN, HIGH);
-    digitalWrite(MOTOR_IN2_PIN, LOW);
     analogWrite(MOTOR_EN_PIN, 0); // Motor oprit la start
 }
