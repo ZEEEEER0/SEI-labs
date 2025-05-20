@@ -1,31 +1,42 @@
-#include <config.h>
 #include <Arduino.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include <LiquidCrystal_I2C.h>
+#include <config.h>
 
-// OLED setup
-Adafruit_SSD1306 display(OLED_WIDTH, OLED_HEIGHT, &Wire, -1);
+// Setează adresa LCD-ului (0x27 sau 0x3F, după modulul tău)
+#define LCD_ADDR 0x27
+#define LCD_COLS 16
+#define LCD_ROWS 2
+
+LiquidCrystal_I2C lcd(LCD_ADDR, LCD_COLS, LCD_ROWS);
 
 void lcd_init(void) {
-    if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // 0x3C este adresa standard
-        for (;;); // Blochează dacă nu găsește display-ul
-    }
-    display.clearDisplay();
-    display.setTextSize(2);
-    display.setTextColor(SSD1306_WHITE);
-    display.setCursor(0, 0);
-    display.println("FSM LED");
-    display.display();
+    lcd.init();
+    lcd.backlight();
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Semafor");
     delay(500);
-    display.clearDisplay();
-    display.display();
+    lcd.clear();
 }
 
+// state trebuie să fie de forma "E:VERDE N:ROSU" etc.
 void lcd_show_state(const char* state) {
-    display.clearDisplay();
-    display.setTextSize(2);
-    display.setCursor(0, 0);
-    display.print("LED: ");
-    display.println(state);
-    display.display();
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    // Caută poziția "N:" ca să spargi stringul pe linii
+    const char* n_ptr = strstr(state, "N:");
+    if (n_ptr) {
+        // Scrie E:... pe prima linie
+        char buf[17] = {0};
+        size_t len = n_ptr - state;
+        if (len > 16) len = 16;
+        strncpy(buf, state, len);
+        lcd.print(buf);
+        // Scrie N:... pe a doua linie
+        lcd.setCursor(0, 1);
+        lcd.print(n_ptr);
+    } else {
+        // Dacă nu găsește N:, scrie tot pe prima linie
+        lcd.print(state);
+    }
 }

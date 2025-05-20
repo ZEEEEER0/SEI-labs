@@ -1,25 +1,20 @@
 #include <Arduino.h>
+#include <Arduino_FreeRTOS.h>
+#include <semphr.h>
+#include <task.h>
 #include <config.h>
-#include <fsm_button_led.h>
 #include <lcd_display.h>
+#include <semafor_fsm.h>
 
 void app_setup() {
     Serial.begin(BAUD_RATE);
     lcd_init();
-    fsm_init(BUTTON_PIN, LED_PIN);
+    semafor_fsm_init();
+    xTaskCreate(semafor_fsm_task, "SemaforFSM", 256, NULL, 1, NULL);
+    vTaskStartScheduler();
 }
 
 void app_loop() {
-    fsm_update();
-    fsm_led_state_t state = fsm_get_state();
-
-    // Serial reporting
-    if (state == FSM_LED_ON) {
-        Serial.println("LED ON");
-        lcd_show_state("ON");
-    } else {
-        Serial.println("LED OFF");
-        lcd_show_state("OFF");
-    }
-    delay(100);
+    // Nu folosi loop, FreeRTOS rulează task-urile
+    vTaskDelay(portMAX_DELAY);
 }
