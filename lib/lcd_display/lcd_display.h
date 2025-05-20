@@ -4,6 +4,6 @@
 #include <stdint.h>
 
 void lcd_init(void);
-void lcd_update_display(uint16_t setPoint, uint16_t humidity, uint16_t output);
+void lcd_show_state(const char* state);
 
 #endif // LCD_DISPLAY_H

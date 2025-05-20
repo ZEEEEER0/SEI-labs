@@ -11,27 +11,21 @@ void lcd_init(void) {
         for (;;); // Blochează dacă nu găsește display-ul
     }
     display.clearDisplay();
-    display.setTextSize(1);
+    display.setTextSize(2);
     display.setTextColor(SSD1306_WHITE);
     display.setCursor(0, 0);
-    display.println("OLED OK");
+    display.println("FSM LED");
     display.display();
     delay(500);
     display.clearDisplay();
     display.display();
 }
 
-void lcd_update_display(uint16_t setPoint, uint16_t humidity, uint16_t output) {
+void lcd_show_state(const char* state) {
     display.clearDisplay();
+    display.setTextSize(2);
     display.setCursor(0, 0);
-    display.print("SP:");
-    display.print(setPoint);
-    display.print(" H:");
-    display.print(humidity);
-
-    display.setCursor(0, 16);
-    display.print("PWM:");
-    display.print(output);
-
+    display.print("LED: ");
+    display.println(state);
     display.display();
 }
