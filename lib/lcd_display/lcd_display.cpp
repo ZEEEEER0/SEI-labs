@@ -1,31 +1,44 @@
 #include <config.h>
 #include <Arduino.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include <LiquidCrystal_I2C.h>
 
-// OLED setup
-Adafruit_SSD1306 display(OLED_WIDTH, OLED_HEIGHT, &Wire, -1);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 void lcd_init(void) {
-    if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // 0x3C este adresa standard
-        for (;;); // Blochează dacă nu găsește display-ul
-    }
-    display.clearDisplay();
-    display.setTextSize(2);
-    display.setTextColor(SSD1306_WHITE);
-    display.setCursor(0, 0);
-    display.println("FSM LED");
-    display.display();
+    lcd.init();
+    lcd.backlight();
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Semafor");
     delay(500);
-    display.clearDisplay();
-    display.display();
+    lcd.clear();
 }
 
 void lcd_show_state(const char* state) {
-    display.clearDisplay();
-    display.setTextSize(2);
-    display.setCursor(0, 0);
-    display.print("LED: ");
-    display.println(state);
-    display.display();
+    // Împarte textul în două linii la '\n'
+    char line1[17] = {0};
+    char line2[17] = {0};
+    const char* nl_ptr = strchr(state, '\n');
+    if (nl_ptr) {
+        size_t len1 = nl_ptr - state;
+        if (len1 > 16) len1 = 16;
+        strncpy(line1, state, len1);
+        line1[len1] = '\0';
+        strncpy(line2, nl_ptr + 1, 16);
+        line2[16] = '\0';
+    } else {
+        strncpy(line1, state, 16);
+        line1[16] = '\0';
+        line2[0] = '\0';
+    }
+    // Completează cu spații până la 16 caractere
+    for (size_t i = strlen(line1); i < 16; ++i) line1[i] = ' ';
+    line1[16] = '\0';
+    for (size_t i = strlen(line2); i < 16; ++i) line2[i] = ' ';
+    line2[16] = '\0';
+
+    lcd.setCursor(0, 0);
+    lcd.print(line1);
+    lcd.setCursor(0, 1);
+    lcd.print(line2);
 }

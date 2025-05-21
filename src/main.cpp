@@ -7,4 +7,5 @@ void setup() {
 
 void loop() {
     app_loop();
+    Serial.println("loop running");
 }
