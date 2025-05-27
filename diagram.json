@@ -12,13 +12,6 @@
       "attrs": {}
     },
     {
-      "type": "wokwi-lcd1602",
-      "id": "lcd1",
-      "top": 169.6,
-      "left": 380,
-      "attrs": { "pins": "i2c" }
-    },
-    {
       "type": "wokwi-led",
       "id": "led1",
       "top": -109.2,
@@ -131,10 +124,6 @@
     }
   ],
   "connections": [
-    [ "lcd1:SCL", "mega:21", "green", [ "h-9.6", "v19.5" ] ],
-    [ "lcd1:SDA", "mega:20", "green", [ "h-19.2", "v29" ] ],
-    [ "lcd1:VCC", "mega:5V.1", "red", [ "h-28.8", "v67.3" ] ],
-    [ "lcd1:GND", "mega:GND.5", "black", [ "h-19.2", "v115.2", "h-192" ] ],
     [ "r3:1", "led3:A", "green", [ "h0" ] ],
     [ "r2:1", "led2:A", "green", [ "h0" ] ],
     [ "led1:A", "r1:1", "green", [ "v0" ] ],
